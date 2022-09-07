@@ -16,13 +16,24 @@ pipeline {
     }
 
     
-    
+    stages {
+        stage('Clone code from GitHub') {
+            steps{
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'gitcred', url: 'https://github.com/sergeikitsun/java-simple-app.git']]])
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+           
+            }
+        }
+        
         
         stage("Maven Build") {
             steps {
                 script {
-		    checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'gitcred', url: 'https://github.com/sergeikitsun/java-simple-app.git']]])
+                    sh "ls -lha"
+                    sh "pwd"
+                    sh "whoami"
                     sh "mvn -Dmaven.test.failure.ignore=true clean package"
+                    sh "whoami"
                 }
             }
         }    
